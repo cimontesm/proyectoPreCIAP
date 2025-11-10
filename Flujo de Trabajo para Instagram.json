@@ -1,0 +1,471 @@
+{
+  "name": "Flujo de Trabajo para Instagram",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        32
+      ],
+      "id": "800ae6a3-f6c1-437a-b882-1212fa002424",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://api.scrapecreators.com/v1/instagram/reels/search",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "scrapeCreatorsApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.mi_busqueda }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        336,
+        32
+      ],
+      "id": "c7414f35-b5af-4594-90f5-a380e7a9727e",
+      "name": "HTTP Request",
+      "credentials": {
+        "scrapeCreatorsApi": {
+          "id": "KS9T8tK82EN7qNft",
+          "name": "Scrape Creators account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Esto crea 4 items de salida, cada uno con tu término de búsqueda\nreturn [\n  { mi_busqueda: \"comida quito\" },\n  { mi_busqueda: \"comida guayaquil\" },\n  { mi_busqueda: \"ropa quito\" },\n  { mi_busqueda: \"ropa guayaquil\" }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        32
+      ],
+      "id": "6d7e8098-0101-4fe1-a2b1-3d457040b47b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "reels",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        512,
+        32
+      ],
+      "id": "236c92fe-7507-4c5b-8ea5-5192e2c6cfc5",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6efc3ec6-219c-435b-b278-04dd030d8f9a",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "68991b4b-4551-47ba-aeb4-fc6b817c8544",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "53c8e31f-73f5-4cce-87b1-6080abd2be73",
+              "name": "video_view_count",
+              "value": "={{ $json.video_view_count }}",
+              "type": "number"
+            },
+            {
+              "id": "6c4ed2cc-578d-41bc-aa4c-f0cee183f93c",
+              "name": "video_play_count",
+              "value": "={{ $json.video_play_count }}",
+              "type": "number"
+            },
+            {
+              "id": "40fadfeb-ae22-40de-a519-8de56d831b9d",
+              "name": "like_count",
+              "value": "={{ $json.like_count }}",
+              "type": "number"
+            },
+            {
+              "id": "d3c44616-2d3f-40a8-98b0-698d71635505",
+              "name": "comment_count",
+              "value": "={{ $json.comment_count }}",
+              "type": "number"
+            },
+            {
+              "id": "06843f77-6717-4ece-9e31-94f969288b66",
+              "name": "location_slug",
+              "value": "={{ $json.location.slug }}",
+              "type": "string"
+            },
+            {
+              "id": "a5ad2ea3-1d98-4703-8f05-d4d04b17bfc5",
+              "name": "caption",
+              "value": "={{ $json.caption ? $json.caption.split('#')[0].replace(/\\n/g, '').trim() : '' }}",
+              "type": "string"
+            },
+            {
+              "id": "b9be7a8e-001b-4ff2-a1a3-218d72cf1283",
+              "name": "hashtags",
+              "value": "={{ $json.caption ? $json.caption.replace(/[\\n\\r]/g, ' ').split('#').slice(1).map(h => h.trim().split(' ')[0].trim()) : [] }}",
+              "type": "array"
+            },
+            {
+              "id": "36c7447f-6505-492f-9e41-7a113f53ca66",
+              "name": "owner_follower_count",
+              "value": "={{ $json.owner.follower_count }}",
+              "type": "number"
+            },
+            {
+              "id": "ebe0030e-a3c2-4d3a-817a-d23aa3eb5e49",
+              "name": "create_date",
+              "value": "={{ $json.taken_at }}",
+              "type": "string"
+            },
+            {
+              "id": "72befaef-c390-40bd-8ed2-a8d177fd2494",
+              "name": "owner_username",
+              "value": "={{ $json.owner.username }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        32
+      ],
+      "id": "b11cb458-6a7a-46df-ba59-711c5b74491b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "tendencias_instagram",
+        "fields": "id, url, owner_username,video_view_count, video_play_count, like_count, comment_count, location_slug, ciudad, caption, hashtags, owner_follower_count, create_date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        1136,
+        -160
+      ],
+      "id": "c10770e5-dbc3-49f7-a39f-357fad7646c3",
+      "name": "Insert documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "kfT2nltyadM7X3nZ",
+          "name": "MongoDB account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para detectar ciudad en posts de Instagram/TikTok\nconst items = $input.all();\n\n// Palabras clave para cada ciudad (en minúsculas)\nconst quitoKeywords = [\n  'quito', 'qto', 'uio', 'pichincha', 'mitaddelmundo', 'mitad del mundo',\n  'cumbaya', 'tumbaco', 'calderón', 'calderon', 'san rafael', 'sanrafael',\n  'conocoto', 'la carolina', 'lacarolina', 'mariscal', 'guapulo',\n  'el panecillo', 'elpanecillo', 'norte de quito', 'sur de quito',\n  'centro histórico quito', 'centrohistorico', 'plaza grande',\n  'la floresta', 'lafloresta', 'la ronda', 'laronda'\n];\n\nconst guayaquilKeywords = [\n  'guayaquil', 'guayaco', 'gye', 'guayas', 'samborondon', 'samborondón',\n  'via a la costa', 'vialacosta', 'urdesa', 'centro de guayaquil',\n  'malecón 2000', 'malecon 2000', 'malecon2000', 'las peñas', 'laspeñas',\n  'cerro santa ana', 'cerrosantaana', 'santana', 'kennedy', \n  'norte de guayaquil', 'sur de guayaquil', 'alborada', 'la garzota', \n  'lagarzota', 'mall del sol', 'malldelsol', 'riocentro', 'entre ríos',\n  'entrerios', 'duran', 'durán'\n];\n\n// Función para limpiar y normalizar texto\nfunction normalizeText(text) {\n  if (!text) return '';\n  return text\n    .toLowerCase()\n    .normalize(\"NFD\").replace(/[\\u0300-\\u036f]/g, \"\") // Quitar acentos\n    .replace(/[^\\w\\s]/g, '') // Quitar caracteres especiales\n    .trim();\n}\n\n// Función para buscar keywords en texto\nfunction findCity(text, keywords) {\n  const normalized = normalizeText(text);\n  return keywords.some(keyword => {\n    const normalizedKeyword = normalizeText(keyword);\n    return normalized.includes(normalizedKeyword);\n  });\n}\n\n// Procesar cada item\nconst processedItems = items.map(item => {\n  const data = item.json;\n  \n  // Preparar textos para búsqueda\n  const caption = data.caption || '';\n  const locationSlug = data.location_slug || '';\n  const hashtags = Array.isArray(data.hashtags) \n    ? data.hashtags.join(' ') \n    : (typeof data.hashtags === 'string' ? data.hashtags : '');\n  \n  // Combinar todos los textos\n  const allText = `${caption} ${locationSlug} ${hashtags}`;\n  \n  // Detectar ciudad\n  const isQuito = findCity(allText, quitoKeywords);\n  const isGuayaquil = findCity(allText, guayaquilKeywords);\n  \n  // Determinar ciudad\n  let ciudad = '';\n  \n  if (isQuito && !isGuayaquil) {\n    ciudad = 'Quito';\n  } else if (isGuayaquil && !isQuito) {\n    ciudad = 'Guayaquil';\n  } else if (isQuito && isGuayaquil) {\n    ciudad = 'Ambas';\n  } else {\n    ciudad = 'No detectado';\n  }\n  \n  // Retornar item con nuevo campo\n  return {\n    json: {\n      ...data,\n      ciudad: ciudad\n    }\n  };\n});\n\nreturn processedItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        32
+      ],
+      "id": "6eae8e5e-a783-491a-b8db-10144b24bc4d",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un analista experto en tendencias de TikTok e Instagram para emprendedores en Ecuador.\nTu tarea es analizar múltiples publicaciones de redes sociales (mezcladas entre comida y moda, de Quito y Guayaquil) y encontrar oportunidades de negocio reales (productos físicos para vender).\n\nDatos de las publicaciones:\n\n{{ $json.datos_para_ia }}\n\nInstrucciones:\n\nClasifica los posts en 4 grupos según su contenido:\n\n🍤 Comida Quito\n\n🍤 Comida Guayaquil\n\n👗 Ropa Quito\n\n👗 Ropa Guayaquil\n\nPara cada grupo, analiza el conjunto de posts y responde:\n\n📊 Observación: resumen general (1 línea) de lo que más atrae o genera interacción.\n\n💡 Oportunidad 1: producto físico que podría venderse basado en la tendencia.\n\n💡 Oportunidad 2: otro producto físico relacionado.\n\nUsa emojis según el tipo de producto:\n\n🥩🍕🍔🍰🍣 para comida o productos alimenticios.\n\n👕👗👖🧢👠🧥 para ropa o accesorios.\n\nSé conciso: máximo 1 línea por ítem.\n\nNo uses lenguaje técnico, ni menciones servicios o plataformas.\n\nFormato de salida (sin texto adicional):\n\n🍤 Comida Quito\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]\n\n🍤 Comida Guayaquil\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]\n\n👗 Ropa Quito\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]\n\n👗 Ropa Guayaquil\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        32
+      ],
+      "id": "ff5ab47d-1f4d-4516-8a2c-53fb8be51058",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Zl27hkaxInl0HWv4",
+          "name": "CUENTA PERSONAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Versión minimalista - solo los 3 campos para la IA\nconst items = $input.all();\n\nconst preparedItems = items.map(item => {\n  const data = item.json;\n  \n  return {\n    json: {\n      caption: data.caption || '',\n      hashtags: data.hashtags || '',\n      ciudad: data.ciudad || 'No detectado'\n    }\n  };\n});\n\nreturn preparedItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        32
+      ],
+      "id": "e2df29be-b5d8-4d31-910e-9c46dc2a10a0",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para unificar todos los posts en un solo item para la IA\nconst items = $input.all();\n\n// Crear un string con todos los posts numerados y separados claramente\nlet allPostsText = '';\n\nitems.forEach((item, index) => {\n  const data = item.json;\n  const caption = data.caption || 'Sin caption';\n  const hashtags = Array.isArray(data.hashtags) \n    ? data.hashtags.join(', ') \n    : (typeof data.hashtags === 'string' ? data.hashtags : 'Sin hashtags');\n  const ciudad = data.ciudad || 'No detectado';\n  \n  // Agregar cada post con numeración y separadores claros\n  allPostsText += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPOST #${index + 1}\nCiudad: ${ciudad}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nCaption:\n${caption}\n\nHashtags:\n${hashtags}\n\n`;\n});\n\n// Agregar resumen al inicio\nconst summary = `\n═══════════════════════════════════════\nRESUMEN DE DATOS\n═══════════════════════════════════════\nTotal de posts a analizar: ${items.length}\n\n${allPostsText}\n═══════════════════════════════════════\nFIN DE LOS DATOS\n═══════════════════════════════════════\n`;\n\n// Retornar UN SOLO item con todos los datos\nreturn [{\n  json: {\n    datos_para_ia: summary,\n    total_posts: items.length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        32
+      ],
+      "id": "509fd159-45ae-4d28-8333-3d41b42c4773",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "resumen_ia_ig",
+        "fields": "=resumen_ia",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        2064,
+        32
+      ],
+      "id": "e55d0782-6713-4d54-bb77-4a3bc31ea8cc",
+      "name": "Insert documents1",
+      "credentials": {
+        "mongoDb": {
+          "id": "kfT2nltyadM7X3nZ",
+          "name": "MongoDB account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3f817621-5e39-42b9-b8ab-9d47edf18cae",
+              "name": "resumen_ia",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1856,
+        32
+      ],
+      "id": "31fcbca8-7085-40f6-9143-1af364f91c02",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "resumen_ia"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        32
+      ],
+      "id": "412ed96a-ee25-47c9-90e7-ba7e9badb12c",
+      "name": "Delete documents",
+      "credentials": {
+        "mongoDb": {
+          "id": "kfT2nltyadM7X3nZ",
+          "name": "MongoDB account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Delete documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert documents": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Insert documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Insert documents1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert documents1": {
+      "main": [
+        []
+      ]
+    },
+    "Delete documents": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6ed383a4-f8f2-4302-a503-f2f38550bf30",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84ac353e68fc84ff325eb30abf347157cf7efe7af446c4736ca746c5504b4005"
+  },
+  "id": "uR1ooNoCaXDWxcXM",
+  "tags": []
+}

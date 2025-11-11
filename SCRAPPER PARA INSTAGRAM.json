@@ -1,0 +1,963 @@
+{
+  "name": "SCRAPPER PARA INSTAGRAM",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2160,
+        368
+      ],
+      "id": "7ce2a3f8-01f3-44dc-9031-273240109d51",
+      "name": "Ejecutar Flujo Manualmente"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "resumen_ia"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -1696,
+        368
+      ],
+      "id": "1deb842b-1fc1-40c4-9f4d-67c6fa5c90e5",
+      "name": "Limpiar Recomendaciones Antiguas",
+      "credentials": {
+        "mongoDb": {
+          "id": "koMZd9uxeHGVHbQ4",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Esto crea 4 items de salida, cada uno con tu término de búsqueda\nreturn [\n  { mi_busqueda: \"comida quito\" },\n  { mi_busqueda: \"comida guayaquil\" },\n  { mi_busqueda: \"ropa quito\" },\n  { mi_busqueda: \"ropa guayaquil\" }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1456,
+        368
+      ],
+      "id": "ffc9c3aa-1d30-48a8-a80f-fa13032f21a1",
+      "name": "Generar Búsquedas (Queries)"
+    },
+    {
+      "parameters": {
+        "url": "https://api.scrapecreators.com/v1/instagram/reels/search",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "scrapeCreatorsApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.mi_busqueda }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1216,
+        368
+      ],
+      "id": "b5754958-e3a2-416a-8a41-2b0574968ad5",
+      "name": "Scrapear Reels de IG",
+      "credentials": {
+        "scrapeCreatorsApi": {
+          "id": "2nNaC6Unj8PxAKXp",
+          "name": "Scrape Creators account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "reels",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        368
+      ],
+      "id": "9292063c-f0e7-4b8f-9900-87b3d6f08611",
+      "name": "Separar Listas de Videos"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6efc3ec6-219c-435b-b278-04dd030d8f9a",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "68991b4b-4551-47ba-aeb4-fc6b817c8544",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "53c8e31f-73f5-4cce-87b1-6080abd2be73",
+              "name": "video_view_count",
+              "value": "={{ $json.video_view_count }}",
+              "type": "number"
+            },
+            {
+              "id": "6c4ed2cc-578d-41bc-aa4c-f0cee183f93c",
+              "name": "video_play_count",
+              "value": "={{ $json.video_play_count }}",
+              "type": "number"
+            },
+            {
+              "id": "40fadfeb-ae22-40de-a519-8de56d831b9d",
+              "name": "like_count",
+              "value": "={{ $json.like_count }}",
+              "type": "number"
+            },
+            {
+              "id": "d3c44616-2d3f-40a8-98b0-698d71635505",
+              "name": "comment_count",
+              "value": "={{ $json.comment_count }}",
+              "type": "number"
+            },
+            {
+              "id": "06843f77-6717-4ece-9e31-94f969288b66",
+              "name": "location_slug",
+              "value": "={{ $json.location.slug }}",
+              "type": "string"
+            },
+            {
+              "id": "a5ad2ea3-1d98-4703-8f05-d4d04b17bfc5",
+              "name": "caption",
+              "value": "={{ $json.caption ? $json.caption.split('#')[0].replace(/\\n/g, '').trim() : '' }}",
+              "type": "string"
+            },
+            {
+              "id": "b9be7a8e-001b-4ff2-a1a3-218d72cf1283",
+              "name": "hashtags",
+              "value": "={{ $json.caption ? $json.caption.replace(/[\\n\\r]/g, ' ').split('#').slice(1).map(h => h.trim().split(' ')[0].trim()) : [] }}",
+              "type": "array"
+            },
+            {
+              "id": "36c7447f-6505-492f-9e41-7a113f53ca66",
+              "name": "owner_follower_count",
+              "value": "={{ $json.owner.follower_count }}",
+              "type": "number"
+            },
+            {
+              "id": "ebe0030e-a3c2-4d3a-817a-d23aa3eb5e49",
+              "name": "create_date",
+              "value": "={{ $json.taken_at }}",
+              "type": "string"
+            },
+            {
+              "id": "72befaef-c390-40bd-8ed2-a8d177fd2494",
+              "name": "owner_username",
+              "value": "={{ $json.owner.username }}",
+              "type": "string"
+            },
+            {
+              "id": "5439e30f-d7e0-48c2-a4f0-3c91c0948e0b",
+              "name": "comments",
+              "value": "={{ $json.comments }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -736,
+        368
+      ],
+      "id": "8b915825-f3af-4730-8ba1-b339ac349768",
+      "name": "Filtrar Datos Crudos del Video"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para detectar ciudad en posts de Instagram/TikTok\nconst items = $input.all();\n\n// Palabras clave para cada ciudad (en minúsculas)\nconst quitoKeywords = [\n  'quito', 'qto', 'uio', 'pichincha', 'mitaddelmundo', 'mitad del mundo',\n  'cumbaya', 'tumbaco', 'calderón', 'calderon', 'san rafael', 'sanrafael',\n  'conocoto', 'la carolina', 'lacarolina', 'mariscal', 'guapulo',\n  'el panecillo', 'elpanecillo', 'norte de quito', 'sur de quito',\n  'centro histórico quito', 'centrohistorico', 'plaza grande',\n  'la floresta', 'lafloresta', 'la ronda', 'laronda'\n];\n\nconst guayaquilKeywords = [\n  'guayaquil', 'guayaco', 'gye', 'guayas', 'samborondon', 'samborondón',\n  'via a la costa', 'vialacosta', 'urdesa', 'centro de guayaquil',\n  'malecón 2000', 'malecon 2000', 'malecon2000', 'las peñas', 'laspeñas',\n  'cerro santa ana', 'cerrosantaana', 'santana', 'kennedy', \n  'norte de guayaquil', 'sur de guayaquil', 'alborada', 'la garzota', \n  'lagarzota', 'mall del sol', 'malldelsol', 'riocentro', 'entre ríos',\n  'entrerios', 'duran', 'durán'\n];\n\n// Función para limpiar y normalizar texto\nfunction normalizeText(text) {\n  if (!text) return '';\n  return text\n    .toLowerCase()\n    .normalize(\"NFD\").replace(/[\\u0300-\\u036f]/g, \"\") // Quitar acentos\n    .replace(/[^\\w\\s]/g, '') // Quitar caracteres especiales\n    .trim();\n}\n\n// Función para buscar keywords en texto\nfunction findCity(text, keywords) {\n  const normalized = normalizeText(text);\n  return keywords.some(keyword => {\n    const normalizedKeyword = normalizeText(keyword);\n    return normalized.includes(normalizedKeyword);\n  });\n}\n\n// Procesar cada item\nconst processedItems = items.map(item => {\n  const data = item.json;\n  \n  // Preparar textos para búsqueda\n  const caption = data.caption || '';\n  const locationSlug = data.location_slug || '';\n  const hashtags = Array.isArray(data.hashtags) \n    ? data.hashtags.join(' ') \n    : (typeof data.hashtags === 'string' ? data.hashtags : '');\n  \n  // Combinar todos los textos\n  const allText = `${caption} ${locationSlug} ${hashtags}`;\n  \n  // Detectar ciudad\n  const isQuito = findCity(allText, quitoKeywords);\n  const isGuayaquil = findCity(allText, guayaquilKeywords);\n  \n  // Determinar ciudad\n  let ciudad = '';\n  \n  if (isQuito && !isGuayaquil) {\n    ciudad = 'Quito';\n  } else if (isGuayaquil && !isQuito) {\n    ciudad = 'Guayaquil';\n  } else if (isQuito && isGuayaquil) {\n    ciudad = 'Ambas';\n  } else {\n    ciudad = 'No detectado';\n  }\n  \n  // Retornar item con nuevo campo\n  return {\n    json: {\n      ...data,\n      ciudad: ciudad\n    }\n  };\n});\n\nreturn processedItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        368
+      ],
+      "id": "e603f297-8117-4377-a367-d1b906223adf",
+      "name": "Asignar Ciudad (Quito/GYE)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===============================================\n// DETECTOR DE CATEGORÍA (TikTok / Instagram Reels) - ADAPTADO\n// Detecta si una publicación es de comida o ropa (incluyendo segunda mano)\n// ===============================================\n\nconst items = $input.all();\n\n// ==================================================\n// 1️⃣ Palabras Clave (ampliadas)\n// ==================================================\n\nconst comidaKeywords = [\n  'comida', 'comidas', 'food', 'restaurante', 'restaurantes',\n  'cocina', 'cocinando', 'receta', 'recetas', 'delicioso', 'deliciosa',\n  'rico', 'rica', 'sabroso', 'sabrosa', 'sabor', 'sabores', 'platillo',\n  'platillos', 'plato', 'platos', 'gastronomia', 'gastronomía', 'chef',\n  'foodlover', 'foodie', 'foodies', 'almuerzo', 'almorzando',\n  'cena', 'cenando', 'desayuno', 'desayunando', 'merienda', 'meriendas',\n  'antojito', 'antojitos', 'postre', 'postres', 'snack', 'snacks', \n  'bocadillo', 'bocadillos', 'menu', 'menú', 'degustación', 'degustando',\n  'comer', 'comiendo', 'probar', 'probando', 'saboreando',\n  'delivery', 'domicilio', 'resto', 'cafeteria', 'cafetería', 'pizzeria',\n  'pizzería', 'polleria', 'pollería', 'parrillada', 'asadero',\n  // Platos locales e internacionales\n  'encebollado', 'ceviche', 'bolon', 'bolón', 'tigrillo', 'guatita',\n  'cuy', 'hornado', 'fritada', 'morcilla', 'llapingacho',\n  'seco de chivo', 'seco de pollo', 'caldo de bola', 'locro', 'menestra',\n  'empanadas', 'yaguarlocro', 'arroz con menestra', 'sango',\n  'pizza', 'hamburguesa', 'tacos', 'sushi', 'mariscos', 'paella',\n  'pasta', 'spaghetti', 'lasagna', 'helado', 'burger', 'hotdog',\n  'frappe', 'frappé', 'mojito', 'café', 'coffee', 'coctel', 'cocktail',\n  'drink', 'bebida', 'bebidas', 'cerveza', 'vino', 'licor', 'bar', 'bistro', \n  'ahumado', 'ahumada', 'cocinado', 'parrilla', 'grill'\n];\n\nconst ropaKeywords = [\n  'ropa', 'ropas', 'moda', 'fashion', 'prenda', 'prendas', 'vestir',\n  'vestirse', 'atuendo', 'atuendos', 'outfit', 'outfits', 'look', 'looks',\n  'estilo', 'estilos', 'tendencia', 'tendencias', 'trendy', 'trend', 'haul',\n  'ropa nueva', 'ropa usada', 'moda urbana', 'moda casual', 'moda elegante',\n  'tienda de ropa', 'tienda', 'boutique', 'closet', 'armario',\n  'vistiendo', 'probando ropa', 'comprando ropa', 'unboxing', \n  'ropa vintage', 'ropa deportiva', 'ropa formal', 'moda femenina',\n  'moda masculina', 'ropa de mujer', 'ropa de hombre', 'venta de ropa',\n  'reseller', 'reventa', 'swap', 'intercambio', 'remate', 'liquidacion', 'outlet',\n  // Segunda mano\n  'segunda mano', 'segundamano', 'segunda-mano', '2da mano', '2damano', \n  'secondhand', 'second hand', 'used', 'usado', 'usada', 'usados', 'usadas',\n  'preloved', 'thrift', 'thrifting', 'vintage', 'retro', 'resale', 'consignacion', \n  'mano', 'manos', 'hand', '#segundamano', '#secondhand', '#used', '#preloved', \n  '#thrift', 'segunda mano ropa',\n  // Prendas\n  'camisa', 'camisas', 'camiseta', 'camisetas', 'pantalon', 'pantalones',\n  'jeans', 'short', 'shorts', 'vestido', 'vestidos', 'falda', 'faldas',\n  'chaqueta', 'chaquetas', 'abrigo', 'abrigos', 'saco', 'sacos',\n  'zapato', 'zapatos', 'zapatilla', 'zapatillas', 'sneakers', 'tenis',\n  'botas', 'sandalias', 'chanclas', 'accesorio', 'accesorios',\n  'collar', 'collares', 'pulsera', 'pulseras', 'anillo', 'anillos',\n  'joya', 'joyas', 'arete', 'aretes', 'pendiente', 'pendientes',\n  'bolso', 'bolsos', 'cartera', 'carteras', 'gorra', 'gorras', 'sombrero',\n  'sombreros', 'bufanda', 'bufandas', 'guantes', 'guante', 'conjunto',\n  'conjuntos', 'blusa', 'blusas', 'top', 'tops', 'sudadera', 'hoodie',\n  'buzo', 'buzos', 'minifalda', 'chaqueta de cuero'\n];\n\n// ==================================================\n// 2️⃣ Funciones auxiliares\n// ==================================================\nfunction normalizeText(text) {\n  if (!text) return '';\n  return text\n    .toString()\n    .toLowerCase()\n    .normalize(\"NFD\").replace(/[\\u0300-\\u036f]/g, \"\")\n    .replace(/[^\\p{L}\\p{N}\\s#]/gu, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction findCategory(text, keywords) {\n  const normalized = normalizeText(text);\n  return keywords.some(keyword => normalized.includes(normalizeText(keyword)));\n}\n\n// ==================================================\n// 3️⃣ Procesamiento\n// ==================================================\nconst processedItems = items.map(item => {\n  const data = item.json || {};\n\n  const caption = data.caption || '';\n  const location = data.location_slug || data.location || '';\n  const hashtagsRaw = data.hashtags || data.hashtag || [];\n  const hashtags = Array.isArray(hashtagsRaw)\n    ? hashtagsRaw.join(' ')\n    : (typeof hashtagsRaw === 'string' ? hashtagsRaw : '');\n\n  const allText = `${caption} ${location} ${hashtags}`;\n\n  const isComida = findCategory(allText, comidaKeywords);\n  const isRopa = findCategory(allText, ropaKeywords);\n\n  let categoria = '';\n  if (isComida && !isRopa) categoria = 'Comida';\n  else if (isRopa && !isComida) categoria = 'Ropa';\n  else if (isComida && isRopa) categoria = 'Ambas';\n  else categoria = 'Desconocida';\n\n  return {\n    json: {\n      ...data,\n      categoria\n    }\n  };\n});\n\nreturn processedItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        368
+      ],
+      "id": "02d94dbf-561c-434b-9cb3-d5f7f75e8ac0",
+      "name": "Asignar Categoría (Comida/Ropa)"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "tendencias_instagram",
+        "fields": "id, url, owner_username,video_view_count, video_play_count, like_count, comment_count, location_slug, ciudad, caption, hashtags, owner_follower_count, create_date,categoria",
+        "upsert": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        96
+      ],
+      "id": "93608af8-d76a-4a1e-a77b-e7de0a7a2719",
+      "name": "Guardar Videos en MongoDB (Upsert)",
+      "credentials": {
+        "mongoDb": {
+          "id": "koMZd9uxeHGVHbQ4",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Versión minimalista - solo los 3 campos para la IA\nconst items = $input.all();\n\nconst preparedItems = items.map(item => {\n  const data = item.json;\n  \n  return {\n    json: {\n      caption: data.caption || '',\n      hashtags: data.hashtags || '',\n      ciudad: data.ciudad || 'No detectado'\n    }\n  };\n});\n\nreturn preparedItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        768
+      ],
+      "id": "946facbc-eeef-47d0-bf98-73ea1e144a29",
+      "name": "Filtrar Datos para IA"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Código para unificar todos los posts en un solo item para la IA\nconst items = $input.all();\n\n// Crear un string con todos los posts numerados y separados claramente\nlet allPostsText = '';\n\nitems.forEach((item, index) => {\n  const data = item.json;\n  const caption = data.caption || 'Sin caption';\n  const hashtags = Array.isArray(data.hashtags) \n    ? data.hashtags.join(', ') \n    : (typeof data.hashtags === 'string' ? data.hashtags : 'Sin hashtags');\n  const ciudad = data.ciudad || 'No detectado';\n  \n  // Agregar cada post con numeración y separadores claros\n  allPostsText += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPOST #${index + 1}\nCiudad: ${ciudad}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nCaption:\n${caption}\n\nHashtags:\n${hashtags}\n\n`;\n});\n\n// Agregar resumen al inicio\nconst summary = `\n═══════════════════════════════════════\nRESUMEN DE DATOS\n═══════════════════════════════════════\nTotal de posts a analizar: ${items.length}\n\n${allPostsText}\n═══════════════════════════════════════\nFIN DE LOS DATOS\n═══════════════════════════════════════\n`;\n\n// Retornar UN SOLO item con todos los datos\nreturn [{\n  json: {\n    datos_para_ia: summary,\n    total_posts: items.length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        768
+      ],
+      "id": "91429d4b-a26a-4578-b046-c2b272cf69c0",
+      "name": "Agrupar Videos para IA (Batch)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un analista experto en tendencias de TikTok e Instagram para emprendedores en Ecuador.\nTu tarea es analizar múltiples publicaciones de redes sociales (mezcladas entre comida y moda, de Quito y Guayaquil) y encontrar oportunidades de negocio reales (productos físicos para vender).\n\nDatos de las publicaciones:\n\n{{ $json.datos_para_ia }}\n\nInstrucciones:\n\nClasifica los posts en 4 grupos según su contenido:\n\n🍤 Comida Quito\n\n🍤 Comida Guayaquil\n\n👗 Ropa Quito\n\n👗 Ropa Guayaquil\n\nPara cada grupo, analiza el conjunto de posts y responde:\n\n📊 Observación: resumen general (1 línea) de lo que más atrae o genera interacción.\n\n💡 Oportunidad 1: producto físico que podría venderse basado en la tendencia.\n\n💡 Oportunidad 2: otro producto físico relacionado.\n\nUsa emojis según el tipo de producto:\n\n🥩🍕🍔🍰🍣 para comida o productos alimenticios.\n\n👕👗👖🧢👠🧥 para ropa o accesorios.\n\nSé conciso: máximo 1 línea por ítem.\n\nNo uses lenguaje técnico, ni menciones servicios o plataformas.\n\nFormato de salida (sin texto adicional):\n\n🍤 Comida Quito\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]\n\n🍤 Comida Guayaquil\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]\n\n👗 Ropa Quito\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]\n\n👗 Ropa Guayaquil\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        656,
+        768
+      ],
+      "id": "20fb90e8-aadf-4437-877e-37f426cbaefa",
+      "name": "Generar Recomendaciones (IA)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4ykUqTGWsaZtUrKz",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3f817621-5e39-42b9-b8ab-9d47edf18cae",
+              "name": "resumen_ia",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        992,
+        768
+      ],
+      "id": "36d80ca2-2b9d-4f6b-8d12-076535b59093",
+      "name": "Extraer Texto de la IA"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1️⃣ Obtener el texto completo desde el input\nconst fullText = $json.resumen_ia;\n\n// 2️⃣ Expresión regular para detectar cada bloque (título + contenido)\nconst regex = /(🍤 Comida [^\\n]+|👗 Ropa [^\\n]+)\\n([\\s\\S]*?)(?=\\n🍤|\\n👗|$)/g;\n\n// 3️⃣ Crear arreglo para los nuevos items\nconst newItems = [];\n\n// 4️⃣ Extraer cada grupo con regex\nlet match;\nwhile ((match = regex.exec(fullText)) !== null) {\n  const titulo = match[1].trim();     // Ej: \"🍤 Comida Quito\"\n  const cuerpo = match[2].trim();     // Texto del bloque\n  \n  // Dividir el título para extraer categoría y ciudad\n  const partes = titulo.replace(/🍤|👗/g, '').trim().split(' ');\n  const categoria = partes[0] || 'Desconocida'; // Comida o Ropa\n  const ciudad = partes[1] || 'Desconocida';    // Quito o Guayaquil\n\n  // Construir texto final incluyendo el título\n  const textoCompleto = `${titulo}\\n${cuerpo}`;\n\n  // Crear item\n  newItems.push({\n    json: {\n      categoria,\n      ciudad,\n      texto: textoCompleto\n    }\n  });\n}\n\n// 5️⃣ Retornar los items (n8n los separará automáticamente)\nreturn newItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        768
+      ],
+      "id": "b7302a67-2861-4905-9ec6-c9ae879455d7",
+      "name": "Particionar Recomendaciones"
+    },
+    {
+      "parameters": {
+        "content": "Inicia todo el proceso de scraping y análisis de tendencias.",
+        "height": 256,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2240,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "e457a355-7c2b-4414-9e07-6dfb130a9171",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Asegurar que las recomendaciones sean frescas. Borra la colección 'recomendaciones_ia_ig' en MongoDB .",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1760,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "9e6eec7f-9d10-4a39-a5ad-360ffd198fac",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Crea 4 items (Comida Quito, Comida GYE, Ropa Quito, Ropa GYE) para ejecutar el scraper 4 veces.",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "d85e2750-b622-4603-92a1-00716d86d72a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Ejecuta el Actor de Apify 4 veces. Salida: 4 items, donde cada item es una LISTA de videos.",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1280,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "33b9a878-d8f0-4d3b-9dbc-c19c8b60198c",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Limpia CADA video, extrayendo solo los campos útiles (ID, text, hashtags, etc.) para el siguiente paso.",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -800,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "c82259cf-74e9-4181-b702-0be050a8a1b0",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Lee text y hashtags de CADA video y añade un nuevo campo: ciudad: 'Quito' o ciudad: 'Guayaquil'.",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "26fd5d92-92a8-4e39-b91a-f4e7ce3b6d7a",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Lee text y hashtags de CADA video y añade un nuevo campo: categoria: 'Comida', categoria: 'Ropa' ",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "403119ba-1b6d-4da2-a1cd-3fe8fb6c9119",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Actualiza o Inserta (Upsert) CADA video en la colección tendencias_instagram.",
+        "height": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "974267b5-8e83-4721-8577-a7388036afab",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Prepara los datos para la IA. Selecciona solo description, hashtags, ciudad y categoria de CADA video.",
+        "height": 288,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "f9f10982-2984-4f53-b502-8fe5b3b2a5a4",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Junta todos los items de video en 1 solo gran item. Esto es para enviar todo a Gemini en UNA sola petición.",
+        "height": 288,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "ff905b66-a11a-42de-a55d-740a9a1a7d73",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Envía el \"batch\" de videos a Gemini-Flash. La IA analiza todo y devuelve 1 solo bloque de texto con las 4 recomendaciones.",
+        "height": 288,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        624,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "3f2095b0-68fc-4296-b2c4-1240d44f4a75",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Limpia la respuesta de Gemini.",
+        "height": 288,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        928,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "ae558226-1994-427e-8d2a-f2ef3ddfd34c",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Toma el bloque de texto de la IA y lo \"parte\" en 4 items (filas) separados. Cada item nuevo tiene categoria, ciudad y texto.",
+        "height": 288,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "471b6cf7-c394-4054-af25-344d039d1d4b",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Inserta las 4 recomendaciones (ya limpias y aplanadas) como 4 documentos nuevos en la colección recomendaciones_ia_ig",
+        "height": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1408,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "20490369-a450-475f-aecf-76016f1256fc",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Toma las 4 listas de videos y las \"desenrolla\" en items de video individuales.",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "a628fa54-9b3d-4488-87b0-787e2401f871",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "resumen_ia_ig",
+        "fields": "=categoria,ciudad,texto",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        1472,
+        768
+      ],
+      "id": "6b03cac8-3dbf-40ed-8364-62d2e6ce762f",
+      "name": "Guardar Recomendaciones en MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "koMZd9uxeHGVHbQ4",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "\"Desenrolla\" las 4 listas de palabras clave",
+        "height": 320,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "fe1bd2eb-d9b2-4dbb-9fcd-1ba5c1a419bc",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Asegura que las palabras clave sean recientes y evita sobreescrituras",
+        "height": 336,
+        "width": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2000,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "fafae3a5-e6a8-4336-9a50-bbba537539b5",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "PalabrasClave_IG"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        -1936,
+        368
+      ],
+      "id": "c26bd9b0-bcd8-4680-aacf-dfd5cb9c0d3b",
+      "name": "Limpiar Palabras Clave IG",
+      "credentials": {
+        "mongoDb": {
+          "id": "koMZd9uxeHGVHbQ4",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst itemsInput = $input.all();\n\n// Inicializamos los grupos\nconst grupos = {\n  \"Comida-Quito\": [],\n  \"Comida-Guayaquil\": [],\n  \"Ropa-Quito\": [],\n  \"Ropa-Guayaquil\": []\n};\n\n// Recorremos todos los items\nfor (const item of itemsInput) {\n  const data = item.json;\n\n  const categoria = data.categoria || \"\";\n  const ciudad = data.ciudad || \"\";\n\n  const claveGrupo = `${categoria}-${ciudad}`;\n\n  if (grupos[claveGrupo] && Array.isArray(data.comments)) {\n    for (const c of data.comments) {\n      if (c.text && typeof c.text === 'string' && c.text.trim() !== '') {\n        grupos[claveGrupo].push(c.text.trim());\n      }\n    }\n  }\n}\n\n// Convertimos los arrays en strings formateados\nconst resultado = Object.entries(grupos).map(([clave, comentarios]) => {\n  const textoFinal = comentarios\n    .map((txt, i) => `COMENTARIO ${i + 1}: ${txt}`)\n    .join('\\n\\n');\n\n  const [categoria, ciudad] = clave.split('-');\n\n  return {\n    json: {\n      categoria,\n      ciudad,\n      resumen_comentarios: textoFinal || \"(Sin comentarios disponibles)\"\n    }\n  };\n});\n\nreturn resultado;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        432
+      ],
+      "id": "258d2c56-b772-4c47-b453-dc4537039dd3",
+      "name": "Agrupar Comentarios por Segmento"
+    },
+    {
+      "parameters": {
+        "content": "Agrupa todos los comentarios y textos de CADA segmento en 4 items separados, listos para la IA.",
+        "height": 320,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "6e34d8d0-d8ac-4cb9-ae85-477524ff2010",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un analista de datos especializado en lenguaje natural y comportamiento del consumidor. \nTe proporcionaré un bloque de texto con muchos comentarios reales de redes sociales sobre una categoría y ciudad específicas. \nTu tarea es identificar las palabras o temas más relevantes y representativos que aparecen en esos comentarios, \nevitando palabras genéricas o poco informativas.\n\nPor favor, devuelve una lista limpia de al menos 6 términos o frases clave (pueden ser palabras o expresiones cortas), \nordenadas de mayor a menor relevancia semántica dentro del contexto.\n\n❌ NO incluyas palabras vacías o comunes como: que, la, el, de, y, o, con, para, por, etc.\n❌ NO incluyas palabras obvias del contexto como: ropa, camisa, vestido, pantalón, Ecuador, Quito, Guayaquil, comida, restaurante, local, etc.\n✅ Incluye solo palabras que reflejen ideas, emociones, críticas o detalles concretos que la gente menciona (ej. “servicio”, “espera larga”, “ambiente”, “precios altos”, “autenticidad”, “sabores tradicionales”) OJO NO INVENTES NADA, SOLO COSAS QUE REALMENTE EXISTAN EN LOS COMENTARIOS. LOS DOS PRIMEROS ELEMENTOS DEL ARRAY SIEMPRE PERO SIEMPRE SERAN LA CATEGORIA Y LA CIUDAD. ADEMAS ORDENANDOLO EN ORDEN DE PESO, PONIENDO (DESPUES DE LAS DOS PRIMERAS QUE SIEMPRE SERAN CATEGORIA Y CIUDAD) LA PALABRA QUE MAS RELEVANCIA O TENDENCIA TIENE Y LUEGO LA SIGUIENTE Y LA SIGUIENTE HASTA EL FINAL\n\nFormato de salida esperado:\n[ categoria\",\n  \"ciudad\",\n  \"término_1\",\n  \"término_2\",\n  \"término_3\",\n  \"término_4\",\n  \"término_5\",\n  \"término_6\",\n  ...\n  \"término_10\",\n]\n\nAquí está el bloque de comentarios:\n---\nCategoría: {{ $json.categoria }}\nCiudad: {{ $json.ciudad }}\nComentarios:\n{{ $json.resumen_comentarios }}\n---\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        272,
+        432
+      ],
+      "id": "66f10042-6caa-41f4-8e29-9809a13e1c16",
+      "name": "Extraer Palabras Clave (IA)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4ykUqTGWsaZtUrKz",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Envía los textos de cada segmento a Gemini. La IA devuelve 1 lista (array) de palabras clave relevantes por cada segmento.",
+        "height": 320,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "0c2e66fd-61b2-472e-8981-c7abae3bb302",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🧹 Limpia el texto entre ``` y ```json\nfunction cleanText(str) {\n  return str\n    .replace(/```json/g, \"\")\n    .replace(/```/g, \"\")\n    .replace(/,\\s*\\]/g, \"]\") // elimina comas sobrantes antes del cierre del array\n    .trim();\n}\n\n// ✅ Inicializamos la variable de salida\n/** @type {Array<{json: {categoria: string, ciudad: string, palabra: string, peso: number}}>} */\nconst resultados = [];\n\n// 🔹 Procesar cada item recibido (ya son varios)\nfor (const item of items) {\n  const text = item.json?.content?.parts?.[0]?.text;\n  if (!text) continue;\n\n  const cleaned = cleanText(text);\n\n  let arr;\n  try {\n    arr = JSON.parse(cleaned);\n  } catch (e) {\n    console.error(\"❌ Error parsing JSON:\", e);\n    continue;\n  }\n\n  if (!Array.isArray(arr) || arr.length < 3) continue;\n\n  const categoria = arr[0];\n  const ciudad = arr[1];\n  const palabras = arr.slice(2);\n\n  // 🔢 Asignar pesos decrecientes (primeras palabras tienen más relevancia)\n  const pesoMax = 10;\n  palabras.forEach((palabra, idx) => {\n    resultados.push({\n      json: {\n        categoria,\n        ciudad,\n        palabra,\n        peso: Math.max(pesoMax - idx, 1),\n      },\n    });\n  });\n}\n\n// ✅ Retornar los resultados finales\nreturn resultados;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        432
+      ],
+      "id": "34ce6939-dcc5-48d8-9a9d-22d725738f99",
+      "name": "Aplanar y Ponderar Palabras Clave"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "PalabrasClave_IG",
+        "fields": "categoria,ciudad,palabra,peso",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        848,
+        432
+      ],
+      "id": "bfd9ad85-17d1-4326-938e-af1a38c6803d",
+      "name": "Guardar Palabras Clave Aplanadas",
+      "credentials": {
+        "mongoDb": {
+          "id": "koMZd9uxeHGVHbQ4",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Inserta cada palabracomo una fila separada en la colección PalabrasClave_IG de MongoDB.",
+        "height": 320,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        784,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "8fc06273-31fc-462c-83b4-659277fb6046",
+      "name": "Sticky Note19"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ejecutar Flujo Manualmente": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Palabras Clave IG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Recomendaciones Antiguas": {
+      "main": [
+        [
+          {
+            "node": "Generar Búsquedas (Queries)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Búsquedas (Queries)": {
+      "main": [
+        [
+          {
+            "node": "Scrapear Reels de IG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrapear Reels de IG": {
+      "main": [
+        [
+          {
+            "node": "Separar Listas de Videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar Listas de Videos": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Datos Crudos del Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Datos Crudos del Video": {
+      "main": [
+        [
+          {
+            "node": "Asignar Ciudad (Quito/GYE)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asignar Ciudad (Quito/GYE)": {
+      "main": [
+        [
+          {
+            "node": "Asignar Categoría (Comida/Ropa)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asignar Categoría (Comida/Ropa)": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Datos para IA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Agrupar Comentarios por Segmento",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Guardar Videos en MongoDB (Upsert)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Datos para IA": {
+      "main": [
+        [
+          {
+            "node": "Agrupar Videos para IA (Batch)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agrupar Videos para IA (Batch)": {
+      "main": [
+        [
+          {
+            "node": "Generar Recomendaciones (IA)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Recomendaciones (IA)": {
+      "main": [
+        [
+          {
+            "node": "Extraer Texto de la IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Texto de la IA": {
+      "main": [
+        [
+          {
+            "node": "Particionar Recomendaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Particionar Recomendaciones": {
+      "main": [
+        [
+          {
+            "node": "Guardar Recomendaciones en MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Palabras Clave IG": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Recomendaciones Antiguas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agrupar Comentarios por Segmento": {
+      "main": [
+        [
+          {
+            "node": "Extraer Palabras Clave (IA)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Palabras Clave (IA)": {
+      "main": [
+        [
+          {
+            "node": "Aplanar y Ponderar Palabras Clave",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aplanar y Ponderar Palabras Clave": {
+      "main": [
+        [
+          {
+            "node": "Guardar Palabras Clave Aplanadas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f953bee-e474-47cc-bf7d-967910e9d634",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84ac353e68fc84ff325eb30abf347157cf7efe7af446c4736ca746c5504b4005"
+  },
+  "id": "HmWJokcXZCJ7tXHE",
+  "tags": []
+}

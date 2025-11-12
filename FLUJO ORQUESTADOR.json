@@ -1,0 +1,380 @@
+{
+  "name": "FLUJO ORQUESTADOR",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -336,
+        -160
+      ],
+      "id": "3783549e-e190-4a05-b64a-6950f098d52c",
+      "name": "Iniciar Flujo (Diario 6 AM)"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "2xBjF2sdLiziwjZg",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/2xBjF2sdLiziwjZg",
+          "cachedResultName": "SCRAPPER PARA TIKTOK"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        -160
+      ],
+      "id": "9add9319-0c43-4219-bc65-4d025264d18b",
+      "name": "Ejecutar Sub-Flujo: TikTok"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "uR1ooNoCaXDWxcXM",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/uR1ooNoCaXDWxcXM",
+          "cachedResultName": "SCRAPPER PARA INSTAGRAM"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        336,
+        -160
+      ],
+      "id": "0ce353d3-708d-42e5-8de2-b2419259fe64",
+      "name": "Ejecutar Sub-Flujo: Instagram"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3twKAllZgppRFyf4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3twKAllZgppRFyf4",
+          "cachedResultName": "SCRAPPER DE TRENDS"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        -160
+      ],
+      "id": "c9accd6a-7d3d-46e8-8685-b58f56864ff0",
+      "name": "Ejecutar Sub-Flujo: Google Trends"
+    },
+    {
+      "parameters": {
+        "chatId": "8462193982",
+        "text": "=🚀 ¡Nuevas oportunidades para hacer crecer tu negocio!\n\nTikTok, Instagram y Google Trends se han actualizado 📈\nDescubre en Metabase las tendencias más recientes y lleva tu marca al siguiente nivel. 🌟",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1184,
+        -160
+      ],
+      "id": "399a96a2-6946-4cd7-961f-bab32924203b",
+      "name": "Notificar Fin del Proceso (Telegram)",
+      "webhookId": "1d98bba4-bd59-4c44-9cfb-26d58b5f9a37",
+      "credentials": {
+        "telegramApi": {
+          "id": "WvmwJd84rFMStRGf",
+          "name": "BotTendencias"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Se ejecuta automáticamente todos los días a las 6:00 AM.",
+        "height": 288,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "ba4b023e-c7ee-44a9-a9cc-0a6c383c3b04",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Llama al workflow SCRAPPER PARA TIKTOK y espera a que termine.",
+        "height": 288,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "00e80d7e-32df-4b57-ad16-3216b7d0ee35",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Llama al workflow SCRAPPER PARA INSTAGRAM al finalizar TikTok.",
+        "height": 288,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "e0bc0357-87a7-4478-a252-f2931f5c1ad7",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Llama al workflow SCRAPPER PARA GOOGLE TRENDS al finalizar Instagram.",
+        "height": 288,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "96d531f4-a790-4541-bdd9-737677e5111c",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Envía un aviso por Telegram acerca de la actualización del dashboard cuando los 3 scrapers han terminado.",
+        "height": 288,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1120,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "0ecf7279-b005-4ab3-bbc2-42b259d80896",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Colapsar a un item",
+        "height": 288,
+        "width": 150,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "0ce141c9-11ab-48e7-bab5-db7839178d54",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Colapsar a un item",
+        "height": 288,
+        "width": 150,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        528,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "a30862f6-a03c-4a70-972b-aabb8119f18a",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Colapsar a un item",
+        "height": 288,
+        "width": 150,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        944,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "6fa708d0-f096-4909-83cf-c01b6ec62d0a",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tomamos todos los items que vienen, pero devolvemos solo 1\nreturn [{ json: { message: \"Tiktok Listo.\" } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        -160
+      ],
+      "id": "a6404eaa-3b50-4d69-b58a-4c84e873ee88",
+      "name": "Finalizar Tiktok"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tomamos todos los items que vienen, pero devolvemos solo 1\nreturn [{ json: { message: \"Tiktok Listo.\" } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -160
+      ],
+      "id": "c6ddb802-c355-400e-8fe5-63ddf5a20e37",
+      "name": "Finalizar Instagram"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tomamos todos los items que vienen, pero devolvemos solo 1\nreturn [{ json: { message: \"Todos los scrapers han terminado correctamente.\" } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        -160
+      ],
+      "id": "efbdc53d-798d-40fc-8f86-df092c1cd925",
+      "name": "Finalizar Trends"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Iniciar Flujo (Diario 6 AM)": {
+      "main": [
+        [
+          {
+            "node": "Ejecutar Sub-Flujo: TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ejecutar Sub-Flujo: TikTok": {
+      "main": [
+        [
+          {
+            "node": "Ejecutar Sub-Flujo: Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ejecutar Sub-Flujo: Instagram": {
+      "main": [
+        [
+          {
+            "node": "Finalizar Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ejecutar Sub-Flujo: Google Trends": {
+      "main": [
+        [
+          {
+            "node": "Finalizar Trends",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar Fin del Proceso (Telegram)": {
+      "main": [
+        []
+      ]
+    },
+    "Finalizar Instagram": {
+      "main": [
+        [
+          {
+            "node": "Ejecutar Sub-Flujo: Google Trends",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalizar Trends": {
+      "main": [
+        [
+          {
+            "node": "Notificar Fin del Proceso (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "880f64bb-2767-4b90-b7b7-abc4fb6e0a14",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84ac353e68fc84ff325eb30abf347157cf7efe7af446c4736ca746c5504b4005"
+  },
+  "id": "iIuVvfzUqVlLUFff",
+  "tags": []
+}

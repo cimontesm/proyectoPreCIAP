@@ -1,0 +1,792 @@
+{
+  "name": "SCRAPPER DE TRENDS",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Disparador manual para ejecutar todo el workflow de análisis de trends.",
+        "height": 304,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "eee6f26e-7dee-43d2-b1a7-00ebfdc37013",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Borra los datos de la colección de recomendaciones de negocio para evitar duplicados.",
+        "height": 320,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1040,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "c7fbd81b-e737-4664-8d43-1a948e7f1b0a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Genera los items (IDs y sheets) de los 8 documentos de trends para el análisis.",
+        "height": 320,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1248,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "d359ed2e-8040-4b74-8368-46b7ebd0cab5",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Ejecuta el bucle 8 veces, una por cada documento (trend) a analizar.",
+        "height": 336,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1456,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "34268d62-3849-445c-9c81-216070c2c6a8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Obtiene los datos de la hoja de cálculo correspondiente a la iteración actual.",
+        "height": 320,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1664,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "402b32c6-9aae-4872-9586-e315b8d44733",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Prepara automáticamente el campo 'field' para la actualización en MongoDB.",
+        "height": 320,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1872,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "262227b9-d071-4be6-a462-2e819c4220ff",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Sube los datos formateados a la colección de MongoDB correspondiente.",
+        "height": 288,
+        "width": 230
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2176,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "262c43c9-9eb5-46df-a118-a00af4cc8ad2",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Bifurca el flujo, permitiendo pasar solo si la colección es de consultas relacionadas comida.",
+        "height": 288,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2112,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "42f1a665-a226-4867-a95e-5ee1b5181b63",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Bifurca el flujo, permitiendo pasar solo si la colección es de consultas relacionadas ropa.",
+        "height": 256,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2160,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "c94c716f-6eec-4077-9d0d-8ec9e1a0cac6",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Combina todas las consultas de comida en un solo string de texto.",
+        "height": 272,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2352,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "2302311f-29ed-477b-8308-0fa014ba5984",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Combina todas las consultas de ropa en un solo string de texto.",
+        "height": 256,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2400,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "4c16335c-36d8-4682-aa16-16b2fc3cf926",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Fusiona los strings de consultas de comida y ropa en un solo flujo de datos.",
+        "height": 272,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2608,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "e033fcd9-ee89-4add-952c-ecf2c2168e14",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Formatea el string final para enviarlo como un prompt claro al modelo de IA.",
+        "height": 272,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2832,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "12260815-8290-43f4-93bc-e13208004d46",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Envía el prompt al modelo de IA para obtener las recomendaciones de negocio.",
+        "height": 272,
+        "width": 326
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3072,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "fdbef19c-ec99-4e77-a7ce-6dcace69e12e",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Aísla y extrae la respuesta principal (primer nivel de jerarquía) del output de la IA.",
+        "height": 272,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3408,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "a67961dd-bbe2-47cc-af14-cafc3cf4924b",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "Agrega un 'key' (clave) de categoría a la recomendación generada.",
+        "height": 272,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3632,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "9418b42e-171e-4c54-a029-875835fbb4e4",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "nserta la recomendación final en la colección 'resumen_ia_trends'.",
+        "height": 272,
+        "width": 214
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3856,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "71ae5adf-c17b-45fe-8374-34b7b6f60227",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        880,
+        528
+      ],
+      "id": "c269ca67-9eee-48e1-abdd-e8b23af74a3b",
+      "name": "Iniciar Flujo Manualmente"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "resumen_ia_trends"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        1088,
+        528
+      ],
+      "id": "e2a9e288-3af8-4b22-9f83-547b0201ccab",
+      "name": "Limpiar Recomendaciones Antiguas",
+      "credentials": {
+        "mongoDb": {
+          "id": "kfT2nltyadM7X3nZ",
+          "name": "MongoDB account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Inicio del Código ---\n\n// Aquí definimos todas las tareas que se deben ejecutar.\n// Cada objeto {} es una tarea individual.\nconst tareas = [\n  // --- Tareas para ROPA_ECUADOR ---\n  {\n    docId: '1LbyM3fKx6kj-ybOJ6eKBt2jkDZUujXxAzOBhvMs1Rlw',\n    sheetName: 'MultiTimeline',\n    mongoCollection: 'google_timeline_ropa'\n  },\n  {\n    docId: '1LbyM3fKx6kj-ybOJ6eKBt2jkDZUujXxAzOBhvMs1Rlw',\n    sheetName: '30_dias_geoMap',\n    mongoCollection: 'google_geomap_ropa_detalle'\n  },\n  {\n    docId: '1LbyM3fKx6kj-ybOJ6eKBt2jkDZUujXxAzOBhvMs1Rlw',\n    sheetName: 'consultas_relacionadas',\n    mongoCollection: 'google_consultas_ropa'\n  },\n\n  // --- Tareas para COMIDA_ECUADOR ---\n  {\n    docId: '1r7W4lo06zY2ynByEGHVhAd7XD-RI1chKXZhgSgmKoJQ',\n    sheetName: 'MultiTimeline',\n    mongoCollection: 'google_timeline_comida'\n  },\n  {\n    docId: '1r7W4lo06zY2ynByEGHVhAd7XD-RI1chKXZhgSgmKoJQ',\n    sheetName: '30_dias_geoMap',\n    mongoCollection: 'google_geomap_comida_detalle'\n  },\n  {\n    docId: '1r7W4lo06zY2ynByEGHVhAd7XD-RI1chKXZhgSgmKoJQ',\n    sheetName: 'consultas_relacionadas',\n    mongoCollection: 'google_consultas_comida'\n  },\n\n  // --- Tareas para Rubro_Comparativo_General ---\n  {\n    docId: '1FVmRXyps4tUCyJ4oM_1TPN8_llj3-f_ErASAQe3Inug',\n    sheetName: 'MultiTimeline',\n    mongoCollection: 'google_rubro_timeline'\n  },\n  {\n    docId: '1FVmRXyps4tUCyJ4oM_1TPN8_llj3-f_ErASAQe3Inug',\n    sheetName: '30_dias_geoMap',\n    mongoCollection: 'google_geomap_rubro_detalle'\n  }\n];\n\n// Devolvemos la lista. n8n ejecutará los siguientes nodos\n// 8 veces (una por cada objeto en la lista 'tareas').\nreturn tareas.map(item => ({ json: item }));\n\n// --- Fin del Código ---"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        528
+      ],
+      "id": "288c7b5b-132c-4e24-9c4e-e5c55360f71e",
+      "name": "Preparar IDs para Iteración"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1488,
+        528
+      ],
+      "id": "8b2ab312-c29d-4868-b2b2-557cce95b982",
+      "name": "Iterar Documentos de Trends (8x)"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.docId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $json.sheetName }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1712,
+        544
+      ],
+      "id": "14c653be-0047-4c88-beec-80feacf469ca",
+      "name": "Leer Datos del Documento",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jjZJEIE9mgA7RIjG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// CODE PREPARADOR - STRING DE FIELDS\n// Mode: \"Run Once for All Items\"\n// ============================================\n\n// 1. Obtenemos la tarea que disparó esta ejecución\nconst tarea = $(\"Iterar Documentos de Trends (8x)\").item.json;\nconst collectionName = tarea.mongoCollection;\n\n// 2. Obtenemos todas las filas de la hoja actual\nconst filasDeSheets = $input.all();\n\n// 3. Extraemos las keys del primer documento\nconst primerDoc = filasDeSheets[0].json;\nconst keys = Object.keys(primerDoc).filter(key => \n  key !== 'mongoCollection' && \n  key !== 'docId' && \n  key !== 'sheetName'\n);\n\n// 4. Creamos el string de fields (solo los nombres separados por comas)\nconst fieldsString = keys.join(', ');\n\n// 5. Procesamos cada documento\nreturn filasDeSheets.map(fila => {\n  const doc = { ...fila.json };\n  delete doc.mongoCollection;\n  delete doc.docId;\n  delete doc.sheetName;\n\n  // 🔹 Convertir todos los números string a int (excepto fechas)\n  for (const key in doc) {\n    const value = doc[key];\n\n    // si es string y no contiene \"/\" (formato fecha) y es número válido\n    if (typeof value === \"string\" && !value.includes(\"/\") && !isNaN(value)) {\n      doc[key] = parseInt(value, 10);\n    }\n  }\n\n  return {\n    json: {\n      collection: collectionName,\n      fields: fieldsString,  // String simple: \"row_number, rubro, fecha, vestido, blusa...\"\n      ...doc\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        544
+      ],
+      "id": "1f0706bc-27ad-4399-aae4-0d346060277d",
+      "name": "Formatear Datos para MongoDB"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "={{ $json.collection }}",
+        "updateKey": "=row_number",
+        "fields": "={{ $json.fields }}",
+        "upsert": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        2240,
+        768
+      ],
+      "id": "30ec0e34-158d-41a0-b8ec-8741df4ebe32",
+      "name": "Actualizar Colección de Trends",
+      "credentials": {
+        "mongoDb": {
+          "id": "kfT2nltyadM7X3nZ",
+          "name": "MongoDB account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b008046c-8a9f-4afb-a61b-e23157199030",
+              "leftValue": "={{ $json.collection }}",
+              "rightValue": "google_consultas_comida",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2176,
+        80
+      ],
+      "id": "90bafb19-ab03-45f5-9d7d-95b86bc82ad1",
+      "name": "Filtrar Consultas [Comida]"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b008046c-8a9f-4afb-a61b-e23157199030",
+              "leftValue": "={{ $json.collection }}",
+              "rightValue": "google_consultas_ropa",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2208,
+        496
+      ],
+      "id": "479285d2-733f-4dd2-85d4-59646f8ee49e",
+      "name": "Filtrar Consultas [Ropa]"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// CODE EXTRACTOR DE TÉRMINOS (SIMPLE)\n// Coloca DESPUÉS de cada IF (TRUE)\n// Mode: \"Run Once for All Items\"\n// ============================================\n\n// 1. Obtenemos TODOS los items\nconst todosLosItems = $input.all();\n\n// 2. Extraemos solo los valores del campo \"termino\"\nconst terminos = todosLosItems\n  .map(item => item.json.termino)\n  .filter(termino => termino && termino.trim() !== '');\n\n// 3. Concatenamos en un solo string separado por comas\nconst terminosString = terminos.join(', ');\n\n// 4. Retornamos UN SOLO item con el string\nreturn [{\n  json: {\n    terminos: terminosString\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        64
+      ],
+      "id": "2e98f7bf-6211-488e-88af-f2340ad84a83",
+      "name": "Unificar Consultas [Comida]"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// CODE EXTRACTOR DE TÉRMINOS (SIMPLE)\n// Coloca DESPUÉS de cada IF (TRUE)\n// Mode: \"Run Once for All Items\"\n// ============================================\n\n// 1. Obtenemos TODOS los items\nconst todosLosItems = $input.all();\n\n// 2. Extraemos solo los valores del campo \"termino\"\nconst terminos = todosLosItems\n  .map(item => item.json.termino)\n  .filter(termino => termino && termino.trim() !== '');\n\n// 3. Concatenamos en un solo string separado por comas\nconst terminosString = terminos.join(', ');\n\n// 4. Retornamos UN SOLO item con el string\nreturn [{\n  json: {\n    terminos: terminosString\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2448,
+        464
+      ],
+      "id": "13701603-3806-404d-9642-4b581c9a82df",
+      "name": "Unificar Consultas [Ropa]"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2672,
+        176
+      ],
+      "id": "16841cdb-ca47-4ae6-9205-0bec2c34188c",
+      "name": "Unir Flujos (Comida y Ropa)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const todosLosItems = $input.all();\n\n// 2. Separamos por tipo\nlet terminosRopa = '';\nlet terminosComida = '';\n\nfor (const item of todosLosItems) {\n  const terminos = item.json.terminos;\n  \n  // Detectamos si es ropa o comida por las palabras clave\n  if (terminos.includes('ropa') || terminos.includes('tienda') || terminos.includes('prenda')) {\n    terminosRopa = terminos;\n  } else if (terminos.includes('comida') || terminos.includes('plato') || terminos.includes('restaurante')) {\n    terminosComida = terminos;\n  }\n}\n\n// 3. Creamos el texto unificado con separadores claros\nconst textoParaIA = `-----COMIDA-----\n${terminosComida}\n\n-----ROPA-----\n${terminosRopa}`;\n\n// 4. Retornamos UN SOLO item con el texto completo\nreturn [{\n  json: {\n    datos_para_ia: textoParaIA\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2896,
+        176
+      ],
+      "id": "f96dd7bb-2e5d-4075-8f54-9bac706f7abb",
+      "name": "Preparar Prompt para IA"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Eres un analista experto en tendencias de Google Trends para emprendedores ecuatorianos.\nTu misión es analizar las búsquedas relacionadas más crecientes en Ecuador, separadas en dos categorías: comida y ropa.\nDebes detectar oportunidades de negocio reales con productos físicos específicos que se puedan vender en el país.\n\n📦 Datos de entrada:\nSe te proporciona un texto con dos bloques claramente separados por encabezados como:\n\n-----COMIDA-----\n[lista de búsquedas de comida]\n\n-----ROPA-----\n[lista de búsquedas de ropa]\n\n\n🎯 Instrucciones:\n\nAnaliza cada bloque por separado (comida y ropa).\n\nPara cada uno:\n\nResume en una sola línea la observación principal (lo que más llama la atención en las búsquedas).\n\nPropón dos productos físicos concretos que alguien podría vender en Ecuador aprovechando esa tendencia.\n\nEvita ideas genéricas como “comida rica” o “ropa bonita”.\nUsa nombres específicos como “bowls de quinua con proteína vegetal” o “chaquetas de mezclilla con bordados personalizados”.\n\nEmpieza cada bloque de tu respuesta con “comida;” o “ropa;” (según corresponda).\n⚠️ No uses el símbolo “;” en ningún otro lugar del texto.\n\nUsa emojis según el tipo de contenido:\n\n🥩🍕🍔🍰🍣 → productos alimenticios\n\n👕👗👖🧢👠🧥 → ropa y accesorios\n\nMantén el formato claro, directo y sin texto adicional fuera de las secciones.\n\n🧾 Formato de salida (sin texto adicional):\n\ncomida;\n🍤 Comida Ecuador\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]\n\nropa;\n👗 Ropa Ecuador\n📊 Observación: [...]\n💡 Oportunidad 1: [...]\n💡 Oportunidad 2: [...]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        3120,
+        176
+      ],
+      "id": "343075c5-ed0a-4cb2-aac7-4db98d05a206",
+      "name": "Generar Recomendaciones con IA",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RIywG3buHIsDN2Ex",
+          "name": "SEGUNDA LLAVE"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ef72df2-422e-4d97-87bd-09d9a6550b0f",
+              "name": "resumen_ia",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3456,
+        176
+      ],
+      "id": "ef0fcd87-7145-491d-9f3e-4bce5c309dcd",
+      "name": "Extraer Recomendación Principal"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// PARTICIONADOR POR CATEGORÍA\n// Mode: \"Run Once for All Items\"\n// ============================================\n\n// 1. Obtener el texto completo desde el input\nconst fullText = $input.first().json.resumen_ia;\n\n// 2. Dividir por las categorías usando el delimitador \";\"\n// Regex busca: \"palabra;\" seguido de todo hasta la próxima \"palabra;\" o fin de texto\nconst regex = /(\\w+);([\\s\\S]*?)(?=\\w+;|$)/g;\n\n// 3. Crear arreglo para los nuevos items\nconst newItems = [];\n\n// 4. Extraer cada bloque\nlet match;\nwhile ((match = regex.exec(fullText)) !== null) {\n  const categoria = match[1].trim();  // \"comida\" o \"ropa\"\n  const texto = match[2].trim();      // Todo el contenido después de \";\"\n  \n  // Solo agregar si hay contenido\n  if (texto) {\n    newItems.push({\n      json: {\n        categoria: categoria,\n        texto: texto\n      }\n    });\n  }\n}\n\n// 5. Retornar los items separados\nreturn newItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3664,
+        176
+      ],
+      "id": "5fab8682-6f11-4731-b1dd-1f5735fb3426",
+      "name": "Asignar Clave de Categoría"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "resumen_ia_trends",
+        "fields": "categoria,texto",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        3872,
+        176
+      ],
+      "id": "f845bd2f-5266-4754-b494-ac56015b5065",
+      "name": "Guardar Resumen en MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "kfT2nltyadM7X3nZ",
+          "name": "MongoDB account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Iniciar Flujo Manualmente": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Recomendaciones Antiguas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Recomendaciones Antiguas": {
+      "main": [
+        [
+          {
+            "node": "Preparar IDs para Iteración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar IDs para Iteración": {
+      "main": [
+        [
+          {
+            "node": "Iterar Documentos de Trends (8x)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Iterar Documentos de Trends (8x)": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Leer Datos del Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Datos del Documento": {
+      "main": [
+        [
+          {
+            "node": "Formatear Datos para MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Datos para MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Colección de Trends",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filtrar Consultas [Comida]",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filtrar Consultas [Ropa]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Colección de Trends": {
+      "main": [
+        [
+          {
+            "node": "Iterar Documentos de Trends (8x)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Consultas [Comida]": {
+      "main": [
+        [
+          {
+            "node": "Unificar Consultas [Comida]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Consultas [Ropa]": {
+      "main": [
+        [
+          {
+            "node": "Unificar Consultas [Ropa]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unificar Consultas [Comida]": {
+      "main": [
+        [
+          {
+            "node": "Unir Flujos (Comida y Ropa)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unificar Consultas [Ropa]": {
+      "main": [
+        [
+          {
+            "node": "Unir Flujos (Comida y Ropa)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Unir Flujos (Comida y Ropa)": {
+      "main": [
+        [
+          {
+            "node": "Preparar Prompt para IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Prompt para IA": {
+      "main": [
+        [
+          {
+            "node": "Generar Recomendaciones con IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Recomendaciones con IA": {
+      "main": [
+        [
+          {
+            "node": "Extraer Recomendación Principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Recomendación Principal": {
+      "main": [
+        [
+          {
+            "node": "Asignar Clave de Categoría",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asignar Clave de Categoría": {
+      "main": [
+        [
+          {
+            "node": "Guardar Resumen en MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3e20babf-af7c-4363-bb3a-4992b65b260f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84ac353e68fc84ff325eb30abf347157cf7efe7af446c4736ca746c5504b4005"
+  },
+  "id": "3twKAllZgppRFyf4",
+  "tags": []
+}
